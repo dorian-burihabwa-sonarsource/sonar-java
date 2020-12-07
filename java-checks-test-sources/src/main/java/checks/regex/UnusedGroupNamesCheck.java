@@ -164,7 +164,20 @@ abstract class UnusedGroupNamesCheck {
 
     someOtherMethod().group(1); // This should be ignored since we don't know which regex we're calling group for
 
+    new Foo(Pattern.compile("(?<name>test)")); // Compliant because passed to constructor
+
     return null;
+  }
+
+  class Foo {
+    Foo(Pattern p) {}
+  }
+
+  private enum BlockTag {
+    RETURN(Pattern.compile("^@return(\\s++)?(?<descr>.+)?"), false); // Compliant because passed to constructor
+
+    BlockTag(Pattern pattern, boolean patternWithName) {
+    }
   }
 
   private void someMethod(Pattern p) {
@@ -212,7 +225,7 @@ abstract class UnusedGroupNamesCheck {
     }
 
     void useMatcher() {
-      matcher.group(1); // Noncompliant [[secondary=207]] {{Directly use 'group' instead of its group number.}}
+      matcher.group(1); // Noncompliant [[secondary=-8]] {{Directly use 'group' instead of its group number.}}
     }
   }
 
